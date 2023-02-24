@@ -1,4 +1,5 @@
 import React from "react";
+import MealItem from "./MealItem/MealItem";
 
 import style from "./MealList.module.css";
 
@@ -30,7 +31,14 @@ const DUMMY_MEALS = [
 ];
 
 function MealList(props) {
-    const mealList = DUMMY_MEALS.map((meal) => <li key={meal.id}>{meal.name}</li>);
+    const mealList = DUMMY_MEALS.map((meal) => (
+        <MealItem
+            key={meal.id}
+            name={meal.name}
+            description={meal.description}
+            price={meal.price}
+        />
+    ));
     return (
         <seciton className={style.meal_list}>
             <ul>{mealList}</ul>
