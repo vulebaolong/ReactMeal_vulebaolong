@@ -3,8 +3,8 @@ import ReactDOM from "react-dom";
 
 import style from "./Modal.module.css";
 
-function Backdrop(params) {
-    return <div className={style.backdrop}></div>;
+function Backdrop(props) {
+    return <div className={style.backdrop} onClick={props.onClick}></div>;
 }
 
 function ModalContent(props) {
@@ -16,7 +16,7 @@ const modalEl = document.getElementById("modal");
 function Modal(props) {
     return (
         <>
-            {ReactDOM.createPortal(<Backdrop />, modalEl)}
+            {ReactDOM.createPortal(<Backdrop onClick={props.onClick} />, modalEl)}
             {ReactDOM.createPortal(
                 <ModalContent>{props.children}</ModalContent>,
                 modalEl

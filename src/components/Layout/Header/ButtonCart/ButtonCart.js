@@ -5,7 +5,7 @@ import CartIcon from "./IconCart";
 
 function ButtonCart(props) {
     return (
-        <button className={style.button}>
+        <button className={style.button} onClick={props.onShowCart}>
             <span className={style.icon}>
                 <CartIcon />
             </span>
