@@ -41,11 +41,11 @@ function MealList(props) {
         />
     ));
     return (
-        <seciton className={style.meal_list}>
+        <section className={style.meal_list}>
             <Card>
                 <ul>{mealList}</ul>
             </Card>
-        </seciton>
+        </section>
     );
 }
 

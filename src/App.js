@@ -1,12 +1,16 @@
 import React from "react";
+import Cart from "./components/Cart/Cart.js";
 import Header from "./components/Layout/Header/Header";
 import Meals from "./components/Meals/Meals";
 
 function App() {
     return (
         <>
+            <Cart />
             <Header />
-            <Meals />
+            <main>
+                <Meals />
+            </main>
         </>
     );
 }
