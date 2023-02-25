@@ -5,6 +5,7 @@ const initCartState = {
     items: [],
     totalAmount: 0,
 };
+
 const cartReducer = (state, action) => {
     if (action.type === "ADD") {
         let itemsNew = [];
@@ -42,7 +43,76 @@ const cartReducer = (state, action) => {
             totalAmount: state.totalAmount + action.item.amount * action.item.price,
         };
     }
-    return initCartState;
+
+    if (action.type === "REMOVE") {
+        const itemsNew = state.items.filter((e) => {
+            return e.id !== action.id;
+        });
+        console.log(itemsNew);
+        return {
+            items: itemsNew,
+            totalAmount: 0,
+        };
+    }
+
+    if (action.type === "UP_AMOUNT") {
+        const indexItem = state.items.findIndex((e) => {
+            return e.id === action.id;
+        });
+        if (indexItem !== -1) {
+            let amountCur = +state.items[indexItem].amount;
+            let priceUp = state.items[indexItem].price / amountCur;
+            return handlerUpDown(amountCur, priceUp, indexItem, "up");
+        }
+        return state;
+    }
+
+    if (action.type === "DOWN_AMOUNT") {
+        const indexItem = state.items.findIndex((e) => {
+            return e.id === action.id;
+        });
+        if (indexItem !== -1) {
+            let amountCur = +state.items[indexItem].amount;
+            let priceUp = state.items[indexItem].price / amountCur;
+            if (amountCur === 1) {
+                const itemsNew = state.items.filter((e) => {
+                    return e.id !== action.id;
+                });
+                const newTotalAmount = state.totalAmount - priceUp;
+                return {
+                    items: itemsNew,
+                    totalAmount: newTotalAmount,
+                };
+            }
+            return handlerUpDown(amountCur, priceUp, indexItem, "down");
+        }
+        return state;
+    }
+
+    function handlerUpDown(amountCur, priceUp, indexItem, flag) {
+        let amountUp, newTotalAmount;
+        if (flag === "up") {
+            amountUp = amountCur + 1;
+            newTotalAmount = state.totalAmount + priceUp;
+        }
+        if (flag === "down") {
+            amountUp = amountCur - 1;
+            newTotalAmount = state.totalAmount - priceUp;
+        }
+
+        state.items[indexItem] = {
+            ...state.items[indexItem],
+            amount: amountUp,
+            price: priceUp * amountUp,
+        };
+        let itemsNew = [...state.items];
+        return {
+            items: itemsNew,
+            totalAmount: newTotalAmount,
+        };
+    }
+
+    return state;
 };
 
 function CartProvider(props) {
@@ -52,13 +122,24 @@ function CartProvider(props) {
         dispatchCart({ type: "ADD", item });
     };
 
-    const removeItemHandler = (id) => {};
+    const removeItemHandler = (id) => {
+        dispatchCart({ type: "REMOVE", id });
+    };
+
+    const upAmountHander = (id) => {
+        dispatchCart({ type: "UP_AMOUNT", id });
+    };
+    const downAmountHander = (id) => {
+        dispatchCart({ type: "DOWN_AMOUNT", id });
+    };
 
     const cartContext = {
         items: cartState.items,
         totalAmount: cartState.totalAmount,
         addItem: addItemHandler,
         removeItem: removeItemHandler,
+        upAmount: upAmountHander,
+        downAmount: downAmountHander,
     };
     return (
         <CartContext.Provider value={cartContext}>{props.children}</CartContext.Provider>

@@ -3,6 +3,10 @@ import classes from "./CartItem.module.css";
 
 function CartItem(props) {
     const price = `$${props.price.toFixed(2)}`;
+    function clickRemoveHandler() {
+        props.onRemove();
+    }
+
     return (
         <li className={classes["cart-item"]}>
             <div>
@@ -13,8 +17,9 @@ function CartItem(props) {
                 </div>
             </div>
             <div className={classes.actions}>
-                <button onClick={props.onRemove}>-</button>
-                <button onClick={props.onAdd}>+</button>
+                <button onClick={props.onDown}>-</button>
+                <button onClick={props.onUp}>+</button>
+                <button onClick={clickRemoveHandler}>x</button>
             </div>
         </li>
     );
