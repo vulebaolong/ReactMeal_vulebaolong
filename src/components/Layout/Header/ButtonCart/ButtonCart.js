@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef } from "react";
 
 import style from "./ButtonCart.module.css";
 import CartIcon from "./IconCart";
-import CartContext from "../../../store/cart-context.js";
+import { CartContext } from "../../../store/CartProvider";
 
 function ButtonCart(props) {
     const ctx = useContext(CartContext);

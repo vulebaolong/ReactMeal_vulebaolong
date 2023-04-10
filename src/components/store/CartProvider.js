@@ -1,13 +1,17 @@
 import React, { useReducer } from "react";
-import CartContext from "./cart-context.js";
+// import CartContext from "./cart-context.js";
 
 const initCartState = {
     items: [],
     totalAmount: 0,
 };
 
+//thiết lập CartContext ban đầu
+const CartContext = React.createContext({});
+
 const cartReducer = (state, action) => {
     if (action.type === "ADD") {
+        console.log("action.type: ", action.type);
         let itemsNew = [];
         /**
          * dùng hàm finđInex để lấy index nếu như id thêm vào có trong state
@@ -45,6 +49,7 @@ const cartReducer = (state, action) => {
     }
 
     if (action.type === "REMOVE") {
+        console.log("action.type: ", action.type);
         const itemsNew = state.items.filter((e) => {
             return e.id !== action.id;
         });
@@ -56,6 +61,7 @@ const cartReducer = (state, action) => {
     }
 
     if (action.type === "UP_AMOUNT") {
+        console.log("action.type: ", action.type);
         const indexItem = state.items.findIndex((e) => {
             return e.id === action.id;
         });
@@ -68,6 +74,7 @@ const cartReducer = (state, action) => {
     }
 
     if (action.type === "DOWN_AMOUNT") {
+        console.log("action.type: ", action.type);
         const indexItem = state.items.findIndex((e) => {
             return e.id === action.id;
         });
@@ -87,6 +94,11 @@ const cartReducer = (state, action) => {
             return handlerUpDown(amountCur, priceUp, indexItem, "down");
         }
         return state;
+    }
+
+    if (action.type === "RESET_ITEMS") {
+        console.log("action.type: ", action.type);
+        return initCartState;
     }
 
     function handlerUpDown(amountCur, priceUp, indexItem, flag) {
@@ -121,7 +133,6 @@ function CartProvider(props) {
     const addItemHandler = (item) => {
         dispatchCart({ type: "ADD", item });
     };
-
     const removeItemHandler = (id) => {
         dispatchCart({ type: "REMOVE", id });
     };
@@ -133,6 +144,13 @@ function CartProvider(props) {
         dispatchCart({ type: "DOWN_AMOUNT", id });
     };
 
+    const resetItemsHander = () => {
+        dispatchCart({
+            type: "RESET_ITEMS",
+        });
+    };
+
+    //Thiết lập lại CartContext
     const cartContext = {
         items: cartState.items,
         totalAmount: cartState.totalAmount,
@@ -140,10 +158,13 @@ function CartProvider(props) {
         removeItem: removeItemHandler,
         upAmount: upAmountHander,
         downAmount: downAmountHander,
+        resetItems: resetItemsHander,
     };
+
     return (
         <CartContext.Provider value={cartContext}>{props.children}</CartContext.Provider>
     );
 }
 
 export default CartProvider;
+export { CartContext };
